@@ -29,6 +29,11 @@ CORS_ORIGIN_REGEX_WHITELIST = [
     r"^http://\w+\:3000$",
 ]
 CORS_ORIGIN_ALLOW_ALL = True
+STATIC_URL = '/staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR,'statifiles')
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = BASE_DIR, 'mediafiles'
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #enforce https
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
