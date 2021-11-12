@@ -11,9 +11,7 @@ ADMINS = (
     ('Henry Udeh', 'admin@ghauzi.com'),
 )
 MANAGERS = ADMINS
-SECRET_KEY = 'django-insecure-_k4%&93vq5j3wchpc_5uej$9yc=27!ydhkw7a786@6rteex=3#'
-DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1','localhost:3000']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
