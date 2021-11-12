@@ -11,6 +11,7 @@ ADMINS = (
     ('Henry Udeh', 'admin@ghauzi.com'),
 )
 MANAGERS = ADMINS
+SECRET_KEY = config('SECRET_KEY')
 ALLOWED_HOSTS = ['*']
 
 
