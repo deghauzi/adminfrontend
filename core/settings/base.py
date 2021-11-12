@@ -68,10 +68,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-
-
-
 
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Africa/Lagos'
