@@ -6,15 +6,15 @@ from .views import (LoginViewSet, RegistrationViewSet, RefreshViewSet,UserViewSe
 routes = DefaultRouter(trailing_slash=False)
 
 # AUTHENTICATION
-routes.register(r'login', LoginViewSet, basename='auth-login')
-routes.register(r'register', RegistrationViewSet, basename='auth-register')
-routes.register(r'refresh', RefreshViewSet, basename='auth-refresh')
-routes.register(r'get_bank_account', GetBankAccountViewSet, basename='get-bank-account')
-routes.register(r'get_bonus_account', GetBonusAccountViewSet, basename='get-bonus-account')
-routes.register(r'get_trans', GetTransactionViewSet, basename='account-transaction')
-routes.register(r'get_contribution', GetContributionSerializerViewSet, basename='account-contribution-transaction')
+routes.register('login', LoginViewSet, 'auth-login')
+routes.register('register', RegistrationViewSet, 'auth-register')
+routes.register('refresh', RefreshViewSet, 'auth-refresh')
+routes.register('get_bank_account', GetBankAccountViewSet, 'get-bank-account')
+routes.register('get_bonus_account', GetBonusAccountViewSet, 'get-bonus-account')
+routes.register('get_trans', GetTransactionViewSet, 'account-transaction')
+routes.register('get_contribution', GetContributionSerializerViewSet, 'account-contribution-transaction')
 # USER
-routes.register(r'user', UserViewSet, basename='user')
+routes.register(r'user', UserViewSet, 'user')
 
 
 urlpatterns = [
