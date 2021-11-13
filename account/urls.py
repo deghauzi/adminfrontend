@@ -14,7 +14,7 @@ routes.register('get_bonus_account', GetBonusAccountViewSet, 'get-bonus-account'
 routes.register('get_trans', GetTransactionViewSet, 'account-transaction')
 routes.register('get_contribution', GetContributionSerializerViewSet, 'account-contribution-transaction')
 # USER
-routes.register(r'user', UserViewSet, 'user')
+routes.register('user', UserViewSet, 'user')
 
 
 urlpatterns = [

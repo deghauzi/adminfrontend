@@ -3,11 +3,11 @@
 from .base import *
 import dj_database_url
 
-
+DEBUG = config('DEBUG',default=False,cast=bool)
 DATABASES = {'default': dj_database_url.config('DATABASE_URL')}
 # database for django tenants
 ALLOWED_HOSTS += ["portal.deghauzimicrolending.com","dashboard.deghauzimicrolending.com"]
-WSGI_APPLICATION = 'core.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.prod.application'
 
 
 AUTH_PASSWORD_VALIDATORS = [
