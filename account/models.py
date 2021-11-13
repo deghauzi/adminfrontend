@@ -96,6 +96,12 @@ class UserBankAccount(models.Model):
         related_name='account',
         on_delete=models.CASCADE,
     )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
     account_type = models.ForeignKey(
         BankAccountType,
         related_name='accounts',
@@ -104,20 +110,26 @@ class UserBankAccount(models.Model):
     account_no = models.PositiveIntegerField(help_text=(
         'please leave blank it auto generated'
     ), blank=True)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICE)
-    birth_date = models.DateField(null=True, blank=True)
-    initial_deposit = models.DecimalField(
+    # initial_deposit = models.DecimalField(
+    #     default=0,
+    #     max_digits=12,
+    #     decimal_places=2
+    # )
+    account_balance = models.DecimalField(
+        help_text=(
+        'please leave blank it auto generated'),
         default=0,
         max_digits=12,
-        decimal_places=2
+        decimal_places=2,
+        null=True, blank=True
     )
-    interest_start_date = models.DateField(
-        null=True, blank=True,
-        help_text=(
-            'The month number that interest calculation will start from'
-        )
-    )
-    initial_deposit_date = models.DateField(null=True, blank=True)
+    # interest_start_date = models.DateField(
+    #     null=True, blank=True,
+    #     help_text=(
+    #         'The month number that interest calculation will start from'
+    #     )
+    # )
+    # initial_deposit_date = models.DateField(null=True, blank=True)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -157,10 +169,18 @@ class UserAddress(models.Model):
         related_name='address',
         on_delete=models.CASCADE,
     )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user_profile',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
     street_address = models.CharField(max_length=512)
     city = models.CharField(max_length=256)
     postal_code = models.PositiveIntegerField()
     country = models.CharField(max_length=256)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICE,null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -176,6 +196,12 @@ class Transaction(models.Model):
         UserBankAccount,
         related_name='transactions',
         on_delete=models.CASCADE,
+    )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user_transactions',
+        on_delete=models.CASCADE,
+        null=True, blank=True
     )
     amount = models.DecimalField(
         decimal_places=2,
@@ -198,16 +224,22 @@ class Transaction(models.Model):
 
     def save(self, *args, **kwargs):
         if self.transaction_type == 1:
-            balance = self.account.initial_deposit + self.amount
-            self.balance_after_transaction = balance
+            if self.account.account_balance != 0:  
+                balance = self.account.account_balance + self.amount
+                self.balance_after_transaction = balance
+            else:
+                self.balance_after_transaction = self.amount    
         if self.transaction_type == 2:
-            balance = self.account.initial_deposit - self.amount
-            self.balance_after_transaction = balance
+            if self.account.account_balance == 0 :
+                return ("you are not allowed for dis")
+            else:
+                balance = self.account.account_balance - self.amount
+                self.balance_after_transaction = balance
         super(Transaction, self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ['timestamp']
-        verbose_name_plural = _('Transactions')
+        ordering = ['-timestamp']
+        verbose_name_plural = _('Contributions')
 
 # bonus account for users
 class BonusAccount(models.Model):
@@ -215,6 +247,12 @@ class BonusAccount(models.Model):
         User,
         related_name='user_bonus_acc',
         on_delete=models.CASCADE,
+    )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user_bonus',
+        on_delete=models.CASCADE,
+        null=True, blank=True
     )
     account = models.ForeignKey(
         UserBankAccount,
@@ -239,6 +277,7 @@ class BonusAccount(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        ordering = ['-created']
         verbose_name_plural = _('User Bonus Account')
     
     def __str__(self):
@@ -274,6 +313,12 @@ class Contribution(models.Model):
         User,
         related_name='user_contribution_acc',
         on_delete=models.CASCADE,
+    )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user_target',
+        on_delete=models.CASCADE,
+        null=True, blank=True
     )
     account = models.ForeignKey(
         UserBankAccount,
