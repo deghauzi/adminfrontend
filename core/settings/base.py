@@ -151,7 +151,7 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to Ghauzi",
+    "welcome_sign": "Welcome to De-Ghauzi",
 
     # Copyright on the footer
     "copyright": "De-Ghauzi",
