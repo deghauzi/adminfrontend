@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from rest_framework.settings import api_settings
 from django.utils.translation import gettext_lazy as _
 from decouple import config
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 ADMINS = (
     ('Henry Udeh', 'admin@ghauzi.com'),
@@ -26,15 +28,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
+
     # third party
-    'corsheaders',
+    'djoser',
+    'social_django',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    
+
     # app
     'account',
+    "withdrawal",
+    'contributions',
+    'userprofile'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +60,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,34 +88,67 @@ LANGUAGES = (
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ),
+    'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend'
 )
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_TOKEN_CLASSES': (
         'rest_framework_simplejwt.tokens.AccessToken',
     )
 }
 
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SET_USERNAME_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'HIDE_USERS': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:3000/google',"https://ogadonate.com/linkedin",
+                                          "https://ogadonate.com/twitter", 'https://ogadonate.com/facebook'],
+    'SERIALIZERS': {
+        'user_create': 'account.auth_serializers.UserCreateSerializer',
+        'user': 'djoser.serializers.UserSerializer',
+        'current_user': 'djoser.serializers.UserSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    'EMAIL': {
+        'activation': 'Utils.emailutils.ActivationEmail',
+        'confirmation': 'Utils.emailutils.ConfirmationEmail',
+        'password_reset': 'Utils.emailutils.PasswordResetEmail',
+        'password_changed_confirmation': 'Utils.emailutils.PasswordChangedConfirmationEmail',
+    }
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
-AUTH_USER_MODEL = 'account.User'
+AUTH_USER_MODEL = 'userprofile.User'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -170,7 +209,8 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
-        {"name": "Home",  "url": "admin:index", "permissions": ["account.view_user"]},
+        {"name": "Home",  "url": "admin:index",
+            "permissions": ["account.view_user"]},
 
         # model admin to link to (Permissions checked against model)
         {"model": "account."},
@@ -210,8 +250,8 @@ JAZZMIN_SETTINGS = {
     # Custom links to append to app groups, keyed on app name
     # "custom_links": {
     #     "fundRaise": [{
-    #         "name": "Make Messages", 
-    #         "url": "make_messages", 
+    #         "name": "Make Messages",
+    #         "url": "make_messages",
     #         "icon": "fas fa-comments",
     #         "permissions": ["fundRaise.view_fundRaise"]
     #     }]
@@ -224,24 +264,24 @@ JAZZMIN_SETTINGS = {
         "auth.Group": "fas fa-users",
         "profile.CompanyProfile": "fas fa-building",
         "profile.PersonalProfile": "far fa-address-card",
-        "auction.Auction":"fab fa-product-hunt",
-        "auction.AuctionBid":"fas fa-gavel",
-        "fundRaise.DonateCash":"fas fa-hand-holding-usd",
-        "fundRaise.DonateToSell":"fas fa-people-carry",
-        "fundRaise.RaiseFund":"fas fa-bullhorn",
-        "fundRaise.DonationPaymentIntent":"fab fa-cc-visa",
-        "donateAdmin.DonateCash":"far fa-handshake",
-        "donateAdmin.DonateItem":"fas fa-gift",
-        "donateAdmin.CashPaymentHistory":"far fa-money-bill-alt",
-        "marketPlace.Orders":"fas fa-cart-arrow-down",
-        "marketPlace.ShippingAddress":"fas fa-truck",
-        "marketPlace.Auction" :"fas fa-gavel",
-        "marketPlace.CashPaymentHistory" :"fab fa-amazon-pay",
-        "project.Project":"fas fa-bullhorn",
-        "project.ProjectDonation":"fas fa-hand-holding-usd",
-        "project.ProjectPaymentIntent":"fab fa-cc-mastercard",
-        "customers.client":"fas fa-code-branch",
-        "django.sites":"fab fa-chrome"
+        "auction.Auction": "fab fa-product-hunt",
+        "auction.AuctionBid": "fas fa-gavel",
+        "fundRaise.DonateCash": "fas fa-hand-holding-usd",
+        "fundRaise.DonateToSell": "fas fa-people-carry",
+        "fundRaise.RaiseFund": "fas fa-bullhorn",
+        "fundRaise.DonationPaymentIntent": "fab fa-cc-visa",
+        "donateAdmin.DonateCash": "far fa-handshake",
+        "donateAdmin.DonateItem": "fas fa-gift",
+        "donateAdmin.CashPaymentHistory": "far fa-money-bill-alt",
+        "marketPlace.Orders": "fas fa-cart-arrow-down",
+        "marketPlace.ShippingAddress": "fas fa-truck",
+        "marketPlace.Auction": "fas fa-gavel",
+        "marketPlace.CashPaymentHistory": "fab fa-amazon-pay",
+        "project.Project": "fas fa-bullhorn",
+        "project.ProjectDonation": "fas fa-hand-holding-usd",
+        "project.ProjectPaymentIntent": "fab fa-cc-mastercard",
+        "customers.client": "fas fa-code-branch",
+        "django.sites": "fab fa-chrome"
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",

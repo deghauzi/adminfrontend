@@ -8,6 +8,11 @@ from django.conf.urls.i18n import i18n_patterns
 
 urlpatterns = [
     path('api/account/',include("account.urls")),
+    path('api/request/',include("withdrawal.urls")),
+    path('api/trans/',include("contributions.urls")),
+    path('api/auth/', include('djoser.urls')),
+    path('api/auth/', include('djoser.urls.jwt')),
+    path('api/social/', include('djoser.social.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 urlpatterns += i18n_patterns(path('admin/', admin.site.urls))
