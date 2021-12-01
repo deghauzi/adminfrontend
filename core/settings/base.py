@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     # app
-    'account',
-    "withdrawal",
-    'contributions',
+    # 'account',
+    # "withdrawal",
+    # 'contributions',
     'userprofile'
 ]
 
