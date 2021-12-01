@@ -18,8 +18,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://dashboard.deghauzimicrolending.com',
-    'http://portal.deghauzimicrolending.com',
+    'https://dashboard.deghauzimicrolending.com',
+    'https://portal.deghauzimicrolending.com',
     'http://localhost:3000'
 )
 CORS_ORIGIN_REGEX_WHITELIST = [
