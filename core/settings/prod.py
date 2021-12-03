@@ -27,13 +27,16 @@ CORS_ORIGIN_REGEX_WHITELIST = [
     r"^http://\w+\.com$",
     r"^http://\w+\:3000$",
 ]
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 STATIC_URL = '/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR,'statifiles')
-MEDIA_URL = '/mediafiles/'
-MEDIA_ROOT = BASE_DIR, 'mediafiles'
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_NAME', default=''),
+    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='')
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 #enforce https
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True

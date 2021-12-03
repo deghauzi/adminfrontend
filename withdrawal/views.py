@@ -8,6 +8,7 @@ class WithdrawalRequestAPI(generics.ListCreateAPIView):
     queryset = WithdrawalRequest.objects.all().order_by('created')
     
     def perform_create(self, serializer):
+        print(self.request.user.account)
         serializer.save(request_user=self.request.user)
     
     def get_queryset(self):

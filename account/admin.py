@@ -1,30 +1,43 @@
 from django.contrib import admin
-from .models import (BankAccountType,BankAccount,WalletAccount)
+from .models import (BankAccountType, BankAccount, WalletAccount)
 from safedelete.admin import SafeDeleteAdmin, SafeDeleteAdminFilter, highlight_deleted
 
 # users account
-class BankAccountAdmin(SafeDeleteAdmin):
-   list_display = (highlight_deleted, "highlight_deleted_field", "bank_account_no", "user_profile", "bank_account_type",
-                   "bank_account_balance","created_by_admin_user") + SafeDeleteAdmin.list_display
-   list_filter = ("bank_account_no", SafeDeleteAdminFilter,) + SafeDeleteAdmin.list_filter
-   field_to_highlight = "bank_account_no"
-   read_only_fields  = ["bank_account_balance"]
-BankAccountAdmin.highlight_deleted_field.short_description = BankAccountAdmin.field_to_highlight
-admin.site.register(BankAccount,BankAccountAdmin)
+
+
+@admin.register(BankAccount)
+class BankAccountAdmin(admin.ModelAdmin):
+    list_display = ("bank_account_no", "user_profile", "bank_account_type",
+                    "bank_account_balance", "created_by_admin_user")
+    list_filter = ("bank_account_no", "bank_account_type",
+                   "created_by_admin_user")
+    readonly_fields = ["bank_account_balance",
+                       "created_by_admin_user", "bank_account_no", "created"]
+
+    def save_model(self, request, obj, form, change):
+        obj.created_by_admin_user = request.user
+        super().save_model(request, obj, form, change)
+
 
 # users wallet account
-class WalletAccountAdmin(SafeDeleteAdmin):
-    list_display = (highlight_deleted, "highlight_deleted_field", "account", "bonus_amount_add",
-                   "bonus_amount_withdrawal","total_amount","wallet_balance","bonus_paid_out","created_by_admin_user") + SafeDeleteAdmin.list_display
-    list_filter = ("bonus_paid_out","wallet_balance","user", SafeDeleteAdminFilter,) + SafeDeleteAdmin.list_filter
-    field_to_highlight = "account"
-WalletAccountAdmin.highlight_deleted_field.short_description = WalletAccountAdmin.field_to_highlight
-admin.site.register(WalletAccount,WalletAccountAdmin)
+@admin.register(WalletAccount)
+class WalletAccountAdmin(admin.ModelAdmin):
+    list_display = ("account", "bonus_amount_add",
+                    "bonus_amount_withdrawal", "total_amount", "wallet_balance",
+                    "bonus_paid_out", "created_by_admin_user")
+    list_filter = ("bonus_paid_out", "wallet_balance",
+                   "user", "created_by_admin_user")
+    readonly_fields = ["total_amount",
+                       "created_by_admin_user", "wallet_balance", "account", "user", "created"]
 
-#account type
-class BankAccountTypeAdmin(SafeDeleteAdmin):
-   list_display = (highlight_deleted, "highlight_deleted_field", "account_type_image") + SafeDeleteAdmin.list_display
-#    list_filter = ("name", SafeDeleteAdminFilter,) + SafeDeleteAdmin.list_filter
-   field_to_highlight = "name"
-BankAccountTypeAdmin.highlight_deleted_field.short_description = BankAccountTypeAdmin.field_to_highlight
-admin.site.register(BankAccountType,BankAccountTypeAdmin)
+    def save_model(self, request, obj, form, change):
+        obj.created_by_admin_user = request.user
+        super().save_model(request, obj, form, change)
+
+
+# account type
+@admin.register(BankAccountType)
+class BankAccountTypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "account_type_image")
+    list_filter = ("name", )
+    readonly_fields = ["created"]

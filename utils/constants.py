@@ -5,6 +5,10 @@ GENDER_CHOICE = (
     (MALE, "Male"),
     (FEMALE, "Female"),
 )
+REQUEST_FROM_ACCOUNT = (
+    ("Main", "Main"),
+    ("Wallet", "Wallet"),
+)
 
 DEPOSIT = 1
 WITHDRAWAL = 2

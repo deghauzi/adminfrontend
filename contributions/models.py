@@ -63,7 +63,7 @@ class DailyContribution(SafeDeleteModel):
 
     class Meta:
         ordering = ['-created']
-        verbose_name_plural = _('Daily Contributions')
+        verbose_name_plural = _('Regular Contributions')
 
 #targeted contributions for salah and mortage
 class TargetContribution(SafeDeleteModel):

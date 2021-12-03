@@ -4,14 +4,14 @@ from .base import *
 
 
 ALLOWED_HOSTS += ['localhost','.localhost','127.0.0.1']
-DEBUG  = False
+DEBUG  = True
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",  
-        "NAME": "memo",
+        "NAME": "de_ghauzi",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "localhost",

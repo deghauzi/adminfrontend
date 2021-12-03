@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'cloudinary',
 
     # app
     'account',
@@ -82,7 +84,6 @@ USE_TZ = True
 
 LANGUAGES = (
     ('en', _('English')),
-    ('fr', _('French')),
 )
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -95,7 +96,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
+    'DATETIME_FORMAT': "%d/%m/%Y %H:%M:%S",
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -133,50 +134,97 @@ DJOSER = {
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:3000/google',"https://ogadonate.com/linkedin",
                                           "https://ogadonate.com/twitter", 'https://ogadonate.com/facebook'],
     'SERIALIZERS': {
-        'user_create': 'account.auth_serializers.UserCreateSerializer',
+        'user_create': 'userprofile.auth_serializers.UserCreateSerializer',
         'user': 'djoser.serializers.UserSerializer',
         'current_user': 'djoser.serializers.UserSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
     'EMAIL': {
-        'activation': 'Utils.emailutils.ActivationEmail',
-        'confirmation': 'Utils.emailutils.ConfirmationEmail',
-        'password_reset': 'Utils.emailutils.PasswordResetEmail',
-        'password_changed_confirmation': 'Utils.emailutils.PasswordChangedConfirmationEmail',
+        'activation': 'utils.emailutils.ActivationEmail',
+        'confirmation': 'utils.emailutils.ConfirmationEmail',
+        'password_reset': 'utils.emailutils.PasswordResetEmail',
+        'password_changed_confirmation': 'utils.emailutils.PasswordChangedConfirmationEmail',
     }
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
 AUTH_USER_MODEL = 'userprofile.User'
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+VALID_IMAGE_EXTENSIONS = [
+    "jpg",
+    "jpeg",
+    "png",
+]
+
+
+LOGIN_URL = '/api/auth/jwt/create/'
+LOGOUT_URL = '/api/auth/logout'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('SMTP_SERVER', default='')
+EMAIL_PORT = config('SMTP_PORT', default=25, cast=int)
+EMAIL_HOST_USER = config('SMTP_LOGIN', default='')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', default='')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+DEFAULT_FROM_EMAIL = 'De-Ghauzi <noreply@deghauzimicrolending.com>'
+
+
+# PAYSTACK PAYMENT
+# PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY', default='')
+# PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY', default='')
+# PAYSTACK_IP = config('PAYSTACK_IP', default='')
+
+
+# # Stripe Payment
+# STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+# STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
+    'formatters': {
+        'verbose': {
+            'format': ('%(asctime)s [%(process)d] [%(levelname)s] ' +
+                       'pathname=%(pathname)s lineno=%(lineno)s ' +
+                       'funcname=%(funcName)s %(message)s'),
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
         }
     },
-
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-       'console':{
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-        },
+            'formatter': 'verbose'
+        }
+    },
     'loggers': {
-        'django.request': {
+        'testlogger': {
             'handlers': ['console'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
+            'level': 'INFO',
+        }
     }
 }
+DEBUG_PROPAGATE_EXCEPTIONS = True
+COMPRESS_ENABLED = config('COMPRESS_ENABLED', False)
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
@@ -201,7 +249,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "De-Ghauzi",
 
     # The model admin to search from the search bar, search bar omitted if excluded
-    "search_model": "account.User",
+    "search_model": "userprofile.User",
 
     # Field name on user model that contains avatar image
     "user_avatar": None,
@@ -215,13 +263,13 @@ JAZZMIN_SETTINGS = {
 
         # Url that gets reversed (Permissions can be added)
         {"name": "Home",  "url": "admin:index",
-            "permissions": ["account.view_user"]},
+            "permissions": ["userprofile.view_user"]},
 
         # model admin to link to (Permissions checked against model)
-        {"model": "account."},
+        {"model": "userprofile."},
 
         # App with dropdown menu to all its models pages (Permissions checked against models)
-        {"app": "account"},
+        {"app": "userprofile"},
     ],
 
     #############
@@ -230,7 +278,7 @@ JAZZMIN_SETTINGS = {
 
     # Additional links to include in the user menu on the top right ("app" url type is not allowed)
     "usermenu_links": [
-        {"model": "account.User"}
+        {"model": "userprofile.User"}
     ],
 
     #############
@@ -250,7 +298,7 @@ JAZZMIN_SETTINGS = {
     "hide_models": ['auth.group'],
 
     # List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
-    "order_with_respect_to": ["account", 'transactions'],
+    "order_with_respect_to": ["userprofile","account", "contributions",'transactions',"withdrawal"],
 
     # Custom links to append to app groups, keyed on app name
     # "custom_links": {
@@ -265,27 +313,15 @@ JAZZMIN_SETTINGS = {
 
     "icons": {
         "auth": "fas fa-users-cog",
-        "account.UserAccount": "fas fa-user",
+        "userprofile.User": "fas fa-user",
         "auth.Group": "fas fa-users",
-        "profile.CompanyProfile": "fas fa-building",
-        "profile.PersonalProfile": "far fa-address-card",
-        "auction.Auction": "fab fa-product-hunt",
-        "auction.AuctionBid": "fas fa-gavel",
-        "fundRaise.DonateCash": "fas fa-hand-holding-usd",
-        "fundRaise.DonateToSell": "fas fa-people-carry",
-        "fundRaise.RaiseFund": "fas fa-bullhorn",
-        "fundRaise.DonationPaymentIntent": "fab fa-cc-visa",
-        "donateAdmin.DonateCash": "far fa-handshake",
-        "donateAdmin.DonateItem": "fas fa-gift",
-        "donateAdmin.CashPaymentHistory": "far fa-money-bill-alt",
-        "marketPlace.Orders": "fas fa-cart-arrow-down",
-        "marketPlace.ShippingAddress": "fas fa-truck",
-        "marketPlace.Auction": "fas fa-gavel",
-        "marketPlace.CashPaymentHistory": "fab fa-amazon-pay",
-        "project.Project": "fas fa-bullhorn",
-        "project.ProjectDonation": "fas fa-hand-holding-usd",
-        "project.ProjectPaymentIntent": "fab fa-cc-mastercard",
-        "customers.client": "fas fa-code-branch",
+        "withdrawal.Withdrawalrequest": "fab fa-cc-mastercard",
+        "userprofile.UserProfile": "fas fa-address-card",
+        "account.BankAccountType": "fas fa-code-branch",
+        "account.BankAccount": "fas fa-handshake",
+        "account.WalletAccount": "fab fa-cc-visa",
+        "contributions.DailyContribution": "fas fa-hand-holding-usd",
+        "contributions.TargetContribution": "fas fa-money-bill-alt",
         "django.sites": "fab fa-chrome"
     },
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -307,7 +343,7 @@ JAZZMIN_SETTINGS = {
     # Render out the change view as a single form, or in tabs, current options are
     "changeform_format": "horizontal_tabs",
     # override change forms on a per modeladmin basis
-    "changeform_format_overrides": {"account.UserAcount": "collapsible", "account.group": "vertical_tabs"},
+    "changeform_format_overrides": {"userprofile.User": "collapsible", "userprofile.group": "vertical_tabs"},
     # Add a language dropdown into the admin
     "language_chooser": True,
 }

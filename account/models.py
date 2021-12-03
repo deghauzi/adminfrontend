@@ -16,7 +16,7 @@ class BankAccountType(SafeDeleteModel):
     _safedelete_policy_ = NO_DELETE
     name = models.CharField(max_length=128)
     account_type_image = models.ImageField(_("Image Logo"),
-                                           help_text='logo image for the type of account')
+                        null=True, blank=True,help_text='logo image for the type of account')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
     

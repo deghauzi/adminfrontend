@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import UserManager
@@ -35,21 +36,20 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
     )
     created_by_admin_user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         related_name='created_by_admin_user_profile',
-        on_delete=models.CASCADE,
-        null=True, blank=True
+        null=True, blank=True, on_delete=models.SET_NULL
     )
-    street_address = models.CharField(max_length=512)
+    street_address = models.TextField()
     city = models.CharField(max_length=256)
     first_name = models.CharField(max_length=15)
     last_name = models.CharField(max_length=15)
     profile_img = models.ImageField(_("Profile Image"))
     postal_code = models.PositiveIntegerField()
-    country = models.CharField(max_length=256)
+    country = models.CharField(max_length=25)
     gender = models.CharField(
-        max_length=1, choices=GENDER_CHOICE, null=True, blank=True)
-    birth_date = models.DateField(null=True, blank=True)
+        max_length=1, choices=GENDER_CHOICE)
+    birth_date = models.DateField()
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 

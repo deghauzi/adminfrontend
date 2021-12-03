@@ -7,12 +7,12 @@ from django.contrib.auth import get_user_model
 
 from .models import UserProfile
 
-user_model = get_user_model
+user_model = get_user_model()
     
 class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = user_model 
-        fields = ['id', 'username', 'email', 'is_active', 'created', 'updated']
+        fields = ['id', 'username', 'email', 'is_active','password', 'created', 'updated']
         read_only_field = ['is_active', 'created', 'updated']
 
 
