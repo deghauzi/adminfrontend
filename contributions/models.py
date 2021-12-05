@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from safedelete.models import SafeDeleteModel,SOFT_DELETE
 from safedelete.managers import  SafeDeleteManager
@@ -44,22 +43,7 @@ class DailyContribution(SafeDeleteModel):
     def __str__(self):
         return f"{self.account.bank_account_no}:{self.amount}"
 
-    def save(self, *args, **kwargs):
-        if self.transaction_type == 1:
-            balance = self.account.bank_account_balance + self.amount
-            if self.account.bank_account_balance != 0:
-                self.balance_after_transaction = balance
-            else:
-                self.balance_after_transaction = balance
-                self.account.bank_account_balance = balance
-        if self.transaction_type == 2:
-            if self.account.bank_account_balance == 0:
-                raise ValidationError('not allowed')
-            else:
-                withdrawal_balance = self.account.bank_account_balance - self.amount
-                self.balance_after_transaction = withdrawal_balance
-                self.account.bank_bank_account_balance = withdrawal_balance
-        super(DailyContribution, self).save(*args, **kwargs)
+
 
     class Meta:
         ordering = ['-created']

@@ -53,7 +53,7 @@ class BankAccount(SafeDeleteModel):
     bank_account_balance = models.DecimalField(
         help_text=(
             'please leave blank it auto generated'),
-        default=0,
+        default=0.00,
         max_digits=12,
         decimal_places=2,
         null=True, blank=True
@@ -65,17 +65,6 @@ class BankAccount(SafeDeleteModel):
 
     def __str__(self):
         return str(self.bank_account_no)
-
-    def save(self, *args, **kwargs):
-        if self.bank_account_type.name == "Gold":
-            self.bank_account_no = 3021000 + self.user_profile.id
-        if self.bank_account_type.name == "Silver":
-            self.bank_account_no = 2021000 + self.user_profile.id + 2
-        if self.bank_account_type.name == "Diamond":
-            self.bank_account_no = 4021000 + self.user_profile.id + 3
-        if self.bank_account_type.name == "Platinum":
-            self.bank_account_no = 5021000 + self.user_profile.id + 4
-        super(BankAccount, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = _('Users Bank Account')
@@ -127,14 +116,8 @@ class WalletAccount(SafeDeleteModel):
         verbose_name_plural = _('User Bonus Account')
 
     def __str__(self):
-        return f"{self.user}: {self.total_amount}"
+        return f"{self.user.username}: {self.total_amount}"
 
-    def save(self, *args, **kwargs):
-        if self.bonus_paid_out == True:
-            self.total_amount -= self.bonus_amount_withdrawal
-        else:
-            self.total_amount += self.bonus_amount_add
-        super(WalletAccount, self).save(*args, **kwargs)
 
 
 
