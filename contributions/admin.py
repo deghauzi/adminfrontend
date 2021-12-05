@@ -47,7 +47,6 @@ class DailyContributionAdmin(admin.ModelAdmin):
             obj.balance_after_transaction = obj.amount
         if obj.transaction_type == 1 and obj.account.bank_account_balance > 0:
             balance = obj.account.bank_account_balance + obj.amount
-            print(balance)
             obj.balance_after_transaction = balance
         if obj.transaction_type == 2:
             obj.balance_after_transaction = obj.account.bank_account_balance - obj.amount

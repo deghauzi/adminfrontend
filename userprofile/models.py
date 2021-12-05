@@ -19,7 +19,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
-
+    class Meta:
+        ordering = ('-created',)
     def __str__(self):
         return f"{self.email}"
 
@@ -54,12 +55,19 @@ class UserProfile(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.first_name}' '{self.last_name}"
+        return f"{self.first_name} {self.last_name}"
     
     @property
     def full_name(self):
-        return f"{self.first_name}' '{self.last_name}"
+        return f"{self.first_name} {self.last_name}"
         
 
     class Meta:
         verbose_name_plural = _('Users Profile')
+
+    def save(self, *args, **kwargs):
+        for field_name in ["first_name", "last_name"]:
+            val = getattr(self, field_name, False)
+            if val:
+                setattr(self, field_name, val.capitalize())
+        super(UserProfile, self).save(*args, **kwargs)

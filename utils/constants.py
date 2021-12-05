@@ -16,8 +16,7 @@ INTEREST = 3
 
 TRANSACTION_TYPE_CHOICES = (
     (DEPOSIT, 'Deposit'),
-    (WITHDRAWAL, 'Withdrawal'),
-    (INTEREST, 'Interest'),
+    (WITHDRAWAL, 'Withdrawal')
 )
 
 End_of_the_Year_Contribution=1

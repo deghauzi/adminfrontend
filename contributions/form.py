@@ -19,7 +19,9 @@ class DailyContributionForm(ModelForm):
         amount = self.cleaned_data.get("amount")
         # check if amount is greater than balance raise validationerror
         if transaction_type == 2:
-            amount > account.bank_account_balance
-            raise ValidationError("Insufficient Balance!")
+            if amount > account.bank_account_balance:
+                raise ValidationError("Insufficient Balance!")
+            else:
+                pass
 
         return self.cleaned_data
