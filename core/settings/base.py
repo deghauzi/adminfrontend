@@ -32,7 +32,6 @@ INSTALLED_APPS = [
 
     # third party
     'djoser',
-    'social_django',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -100,12 +99,6 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.linkedin.LinkedinOAuth2',
-    'social_core.backends.instagram.InstagramOAuth2',
-    'social_core.backends.github.GithubOAuth2',
-    'social_core.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend'
 )
 
@@ -171,13 +164,13 @@ VALID_IMAGE_EXTENSIONS = [
 LOGIN_URL = '/api/auth/jwt/create/'
 LOGOUT_URL = '/api/auth/logout'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = config('SMTP_SERVER', default='')
-# EMAIL_PORT = config('SMTP_PORT', default=25, cast=int)
-# EMAIL_HOST_USER = config('SMTP_LOGIN', default='')
-# EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', default='')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-# DEFAULT_FROM_EMAIL = 'De-Ghauzi <noreply@deghauzimicrolending.com>'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('SMTP_SERVER', default='')
+EMAIL_PORT = config('SMTP_PORT', default=25, cast=int)
+EMAIL_HOST_USER = config('SMTP_LOGIN', default='')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', default='')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+DEFAULT_FROM_EMAIL = 'De-Ghauzi <noreply@deghauzimicrolending.com>'
 
 
 # PAYSTACK PAYMENT
