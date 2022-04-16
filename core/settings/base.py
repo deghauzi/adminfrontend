@@ -121,11 +121,7 @@ DJOSER = {
     'HIDE_USERS': True,
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:3000/google',"https://ogadonate.com/linkedin",
-                                          "https://ogadonate.com/twitter", 'https://ogadonate.com/facebook'],
+    
     'SERIALIZERS': {
         'user_create': 'userprofile.auth_serializers.UserCreateSerializer',
         'user': 'djoser.serializers.UserSerializer',
