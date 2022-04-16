@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import (BankAccountType, BankAccount, WalletAccount)
-
+from utils.functions import  gen_key, gen_key_wa
+import csv
+from django.http import HttpResponse
 
 # users account
 
@@ -17,7 +19,23 @@ class BankAccountAdmin(admin.ModelAdmin):
             return ["bank_account_no", "user_profile", "bank_account_type",
                     "bank_account_balance", "created_by_admin_user", "created"]
         else:
-            return []
+            return ["created_by_admin_user","bank_account_no","bank_account_balance"]
+
+    actions = ["export_as_csv"]
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
+            meta)
+        writer = csv.writer(response)
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field)
+                                  for field in field_names])
+        return response
+    export_as_csv.short_description = "Export Selected"
 
     def changeform_view(self, request, object_id=None,form_url='', extra_context=None):
         try:
@@ -53,19 +71,33 @@ class BankAccountAdmin(admin.ModelAdmin):
 # users wallet account
 @admin.register(WalletAccount)
 class WalletAccountAdmin(admin.ModelAdmin):
-    list_display = ("account", "bonus_amount_add",
-                    "bonus_amount_withdrawal", "total_amount", "wallet_balance",
+    list_display = ("walletID", "wallet_balance",
                     "bonus_paid_out", "created_by_admin_user")
     list_filter = ("bonus_paid_out", "wallet_balance",
                    "user", "created_by_admin_user")
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["account", "bonus_amount_add",
-                    "bonus_amount_withdrawal", "total_amount", "wallet_balance",
+            return ["account", "wallet_balance",
                     "bonus_paid_out", "created_by_admin_user"]
         else:
-            return []
+            return ["walletID","wallet_balance","created_by_admin_user"]
+        
+    actions = ["export_as_csv"]
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(
+            meta)
+        writer = csv.writer(response)
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field)
+                                  for field in field_names])
+        return response
+    export_as_csv.short_description = "Export Selected"
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         try:
@@ -84,13 +116,6 @@ class WalletAccountAdmin(admin.ModelAdmin):
 
         return super(WalletAccountAdmin, self).changeform_view(request, object_id, extra_context=extra_context)
 
-    def save_model(self, request, obj, form, change):
-        obj.created_by_admin_user = request.user
-        if obj.bonus_paid_out == True:
-            obj.total_amount -= obj.bonus_amount_withdrawal
-        else:
-            obj.total_amount += obj.bonus_amount_add
-        super().save_model(request, obj, form, change)
 
 
 # account type

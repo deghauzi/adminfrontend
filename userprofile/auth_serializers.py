@@ -12,7 +12,7 @@ user_model = get_user_model()
 class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = user_model 
-        fields = ['id', 'username', 'email', 'is_active','password', 'created', 'updated']
+        fields = ['id', 'username', 'email', 'is_active','password', 'created', 'updated','is_staff']
         read_only_field = ['is_active', 'created', 'updated']
 
 

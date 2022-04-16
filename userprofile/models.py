@@ -11,7 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         db_index=True, unique=True,  null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -23,13 +23,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ('-created',)
     def __str__(self):
         return f"{self.email}"
+    
+    # def has_perm(self, perm, obj=None):
+    #     return True
+
+    # def has_module_perms(self, app_label):
+    #     return True
 
     @property
     def balance(self):
         if hasattr(self, 'account'):
             return self.account.balance
         return 0.00
-    
+    @property
+    def is_staff(self):
+        return self.is_admin
 class UserProfile(models.Model):
     user = models.OneToOneField(
         User,

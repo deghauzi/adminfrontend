@@ -20,6 +20,7 @@ class WithdrawalRequest(models.Model):
     request_proccessed = models.BooleanField(default=False)
     request_from_account = models.CharField(
         max_length=20, choices=REQUEST_FROM_ACCOUNT)
+    TransID = models.CharField(max_length=12,default='')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 

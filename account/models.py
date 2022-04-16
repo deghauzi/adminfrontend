@@ -79,6 +79,7 @@ class WalletAccount(SafeDeleteModel):
         related_name='user_bonus_acc',
         on_delete=models.CASCADE,
     )
+    walletID = models.CharField(max_length=10,default='')
     created_by_admin_user = models.ForeignKey(
         User,
         related_name='created_by_admin_user_bonus',
@@ -90,22 +91,13 @@ class WalletAccount(SafeDeleteModel):
         related_name='attached_account',
         on_delete=models.CASCADE,
     )
-    bonus_amount_add = models.DecimalField(
-        decimal_places=2,
-        max_digits=12
-    )
-    bonus_amount_withdrawal = models.DecimalField(
-        decimal_places=2,
-        max_digits=12,
-        null=True, blank=True
-    )
-    total_amount = models.DecimalField(
-        decimal_places=2,
-        max_digits=12
-    )
     wallet_balance = models.DecimalField(
+        help_text=(
+            'please leave blank it auto generated'),
+        default=0.00,
+        max_digits=12,
         decimal_places=2,
-        max_digits=12
+        null=True, blank=True
     )
     bonus_paid_out = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
@@ -113,10 +105,10 @@ class WalletAccount(SafeDeleteModel):
 
     class Meta:
         ordering = ['-created']
-        verbose_name_plural = _('User Bonus Account')
+        verbose_name_plural = _('Users Bonus Account')
 
     def __str__(self):
-        return f"{self.user.username}: {self.total_amount}"
+        return f"{self.walletID}: {self.wallet_balance}"
 
 
 

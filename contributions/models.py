@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from safedelete.models import SafeDeleteModel,SOFT_DELETE
 from safedelete.managers import  SafeDeleteManager
 from utils.constants import  TRANSACTION_TYPE_CHOICES, CONTRIBUTION_TYPES_CHOICES
-from account.models import BankAccount
+from account.models import BankAccount,WalletAccount
 from userprofile.models import User
 
 
@@ -35,6 +35,7 @@ class DailyContribution(SafeDeleteModel):
     transaction_type = models.PositiveSmallIntegerField(
         choices=TRANSACTION_TYPE_CHOICES
     )
+    TransID = models.CharField(max_length=12,default='')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
     
@@ -42,20 +43,56 @@ class DailyContribution(SafeDeleteModel):
 
     def __str__(self):
         return f"{self.account.bank_account_no}:{self.amount}"
+class WalletTransaction(SafeDeleteModel):
+    _safedelet_policy_ = SOFT_DELETE
+    bank_account_user = models.ForeignKey(
+        BankAccount,
+        related_name='bank_account_user',
+        on_delete=models.CASCADE,
+        default=''
+    )
+    wallet_account = models.ForeignKey(
+        WalletAccount,
+        related_name='wallet_transactions',
+        on_delete=models.CASCADE,
+    )
+    created_by_admin_user = models.ForeignKey(
+        User,
+        related_name='created_by_admin_user_wallet_transactions',
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
+    amount = models.DecimalField(
+        decimal_places=2,
+        max_digits=12
+    )
+    balance_after_transaction = models.DecimalField(
+        decimal_places=2,
+        max_digits=12,
+        help_text=(
+            'please leave blank it auto generated'
+        ), blank=True, null=True
+    )
+    transaction_type = models.PositiveSmallIntegerField(
+        choices=TRANSACTION_TYPE_CHOICES
+    )
+    TransID = models.CharField(max_length=12,default='')
+    created = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(auto_now_add=True)
+    
+    objects = SafeDeleteManager()
+
+    def __str__(self):
+        return f"{self.wallet_account.walletID}:{self.amount}"
 
 
 
     class Meta:
         ordering = ['-created']
-        verbose_name_plural = _('Regular Contributions')
+        verbose_name_plural = _('Wallet Transactions')
 
 #targeted contributions for salah and mortage
 class TargetContribution(SafeDeleteModel):
-    user = models.ForeignKey(
-        User,
-        related_name='user_contribution_acc',
-        on_delete=models.CASCADE,
-    )
     created_by_admin_user = models.ForeignKey(
         User,
         related_name='created_by_admin_user_target',
@@ -79,8 +116,9 @@ class TargetContribution(SafeDeleteModel):
     contribution_balance = models.DecimalField(
         decimal_places=2,
         max_digits=12,
-        null=True, blank=True
+        null=True, blank=True,default='0'
     )
+    TransID = models.CharField(max_length=12,default='')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
     objects = SafeDeleteManager()
@@ -89,6 +127,7 @@ class TargetContribution(SafeDeleteModel):
         return f"{self.account} : {self.contribution_amount}"
 
     class Meta:
+        ordering = ['-created']
         verbose_name_plural = _('Target Contributions')
 
 

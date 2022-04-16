@@ -33,12 +33,9 @@ class BankAccountOnlySerializer(serializers.ModelSerializer):
 #bonus wallet account
 class WalletAccountSerializer(serializers.ModelSerializer):
     # user_profile = UserCreateSerializer(read_only=True)
-    user_profile = serializers.SlugRelatedField(read_only=True,slug_field="username")
-    account = BankAccountOnlySerializer(read_only=True)
-    created_by_admin_user = serializers.SlugRelatedField(read_only=True,slug_field="username")
+    # user = UserCreateSerializer(read_only=True)
+    # account = BankAccountOnlySerializer(read_only=True)
+    # created_by_admin_user = serializers.SlugRelatedField(read_only=True,slug_field="username")
     class Meta:
         model = WalletAccount
-        fields = ['id','user_profile', 'account','bonus_amount_withdrawal','total_amount','created_by_admin_user',
-                  'bonus_amount_add','bonus_paid_out',
-                  'created', 'updated']
-        read_only_field = [ 'created', 'updated']
+        fields = ['walletID','wallet_balance']

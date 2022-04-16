@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import DailyContribution,TargetContribution
 from .serializers import DailyContributionSerializer,TargetContributionSerializer
 
+
 # Create your views here.
 class DailyContributionAPI(ModelViewSet):
     http_method_names = ['get','post','patch','put']
