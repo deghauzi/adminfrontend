@@ -7,7 +7,7 @@ import dj_database_url
 # database
 DATABASES = {'default': dj_database_url.config('DATABASE_URL')}
 ALLOWED_HOSTS += [".vercel.app", ".herokuapp.com"]
-WSGI_APPLICATION = 'core.wsgi.prod.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 AUTH_PASSWORD_VALIDATORS = [
