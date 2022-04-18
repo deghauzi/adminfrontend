@@ -25,7 +25,7 @@ def update_account_balance(sender, instance, created, **kwargs):
             
             
 @receiver(post_save, sender=WalletTransaction)
-def update_account_balance(sender, instance, created, **kwargs):
+def update_wallet_balance(sender, instance, created, **kwargs):
     if created:
         try:
             obj, created = WalletAccount.objects.update_or_create(pk=instance.wallet_account.id,
