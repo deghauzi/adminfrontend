@@ -19,11 +19,8 @@ def update_account_balance(sender, instance, created, **kwargs):
         try:
             obj, created = BankAccount.objects.update_or_create(pk=instance.account.id,
                             defaults={'bank_account_balance': instance.balance_after_transaction})
-            
-            # obj, created = WalletAccount.objects.update_or_create(pk=instance.wallet_account.id,
-            #     defaults={'wallet_balance': instance.balance_after_transaction})
         except ObjectDoesNotExist:
-            pass
+            print('not working')
             
             
             
@@ -34,5 +31,5 @@ def update_account_balance(sender, instance, created, **kwargs):
             obj, created = WalletAccount.objects.update_or_create(pk=instance.wallet_account.id,
                 defaults={'wallet_balance': instance.balance_after_transaction})
         except ObjectDoesNotExist:
-            pass
+            print('not working')
 

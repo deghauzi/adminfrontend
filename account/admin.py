@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import (BankAccountType, BankAccount, WalletAccount)
-from utils.functions import  gen_key, gen_key_wa
 import csv
 from django.http import HttpResponse
 
@@ -20,6 +19,15 @@ class BankAccountAdmin(admin.ModelAdmin):
                     "bank_account_balance", "created_by_admin_user", "created"]
         else:
             return ["created_by_admin_user","bank_account_no","bank_account_balance"]
+        
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+    
+    def has_add_permission(self, request, obj=None):
+        return True
 
     actions = ["export_as_csv"]
 
@@ -82,7 +90,14 @@ class WalletAccountAdmin(admin.ModelAdmin):
                     "bonus_paid_out", "created_by_admin_user"]
         else:
             return ["walletID","wallet_balance","created_by_admin_user"]
-        
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+    
+    def has_add_permission(self, request, obj=None):
+        return True  
     actions = ["export_as_csv"]
 
     def export_as_csv(self, request, queryset):
@@ -129,6 +144,15 @@ class BankAccountTypeAdmin(admin.ModelAdmin):
             return ["name", "account_type_image", "created"]
         else:
             return []
+        
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
+    
+    def has_add_permission(self, request, obj=None):
+        return True
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         try:

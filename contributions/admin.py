@@ -1,10 +1,11 @@
 from django.contrib import admin
 from .models import TargetContribution, DailyContribution,WalletTransaction
-from django.core.exceptions import ValidationError
 import csv
 from django.http import HttpResponse
 from .form import DailyContributionForm,WalletTransactionForm
-from utils.functions import  gen_key, gen_key_wa
+from utils.functions import  gen_key_wa
+
+
 @admin.register(DailyContribution)
 class DailyContributionAdmin(admin.ModelAdmin):
     form = DailyContributionForm
