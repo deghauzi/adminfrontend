@@ -39,10 +39,10 @@ INSTALLED_APPS = [
     'storages',
 
     # app
-    'account',
-    "withdrawal",
-    'contributions',
-    'userprofile'
+    'account.apps.AccountConfig',
+    "withdrawal.apps.WithdrawalConfig",
+    'contributions.apps.ContributionsConfig',
+    'userprofile.apps.UserprofileConfig'
 ]
 
 MIDDLEWARE = [
