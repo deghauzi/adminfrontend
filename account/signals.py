@@ -17,7 +17,7 @@ def create_bonus_account(sender, instance, created, **kwargs):
 def update_account_balance(sender, instance, created, **kwargs):
     if created:
         try:
-            obj, created = BankAccount.objects.update_or_create(pk=instance.account.id,
+            obj, created = BankAccount.objects.update_or_create(pk=instance.bank_account.id,
                             defaults={'bank_account_balance': instance.balance_after_transaction})
         except ObjectDoesNotExist:
             print('not working')

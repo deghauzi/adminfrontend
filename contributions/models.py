@@ -10,10 +10,15 @@ from userprofile.models import User
 # user daily monthly contributions
 class DailyContribution(SafeDeleteModel):
     _safedelet_policy_ = SOFT_DELETE
-    account = models.ForeignKey(
+    bank_account = models.ForeignKey(
         BankAccount,
         related_name='transactions',
         on_delete=models.CASCADE,
+    )
+    user_account = models.ForeignKey(
+        User,
+        related_name='account_user',
+        on_delete=models.CASCADE
     )
     created_by_admin_user = models.ForeignKey(
         User,
@@ -42,7 +47,10 @@ class DailyContribution(SafeDeleteModel):
     objects = SafeDeleteManager()
 
     def __str__(self):
-        return f"{self.account.bank_account_no}:{self.amount}"
+        return f"{self.bank_account.bank_account_no}"
+    class Meta:
+        ordering= ['-created']
+        
 class WalletTransaction(SafeDeleteModel):
     _safedelet_policy_ = SOFT_DELETE
     bank_account_user = models.ForeignKey(
@@ -99,10 +107,10 @@ class TargetContribution(SafeDeleteModel):
         on_delete=models.SET_NULL,
         null=True, blank=True
     )
-    account = models.ForeignKey(
-        BankAccount,
-        related_name='user_attached_account',
-        on_delete=models.SET_NULL,null=True
+    user_account = models.ForeignKey(
+        User,
+        related_name='user_account_attached',
+        on_delete=models.SET_NULL,null=True,blank=True
     )
     contribution_type = models.PositiveSmallIntegerField(
         choices=CONTRIBUTION_TYPES_CHOICES)
@@ -124,7 +132,7 @@ class TargetContribution(SafeDeleteModel):
     objects = SafeDeleteManager()
 
     def __str__(self):
-        return f"{self.account} : {self.contribution_amount}"
+        return f"{self.user_account} : {self.contribution_amount}"
 
     class Meta:
         ordering = ['-created']

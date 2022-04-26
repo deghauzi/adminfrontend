@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Group
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import UserProfile, User
@@ -25,27 +24,18 @@ class UserProfileAdmin(admin.ModelAdmin):
         if obj:
             return [
                 "user",
-                "first_name",
-                "last_name",
-                "birth_date",
-                "gender",
-                "country",
-                "postal_code",
-                "city",
                 "created_by_admin_user",
                 "created",
-                "profile_img",
-                "street_address",
             ]
         else:
-            return ["created_by_admin_user"]
+            return ["created_by_admin_user","created"]
 
     def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
         try:
             obj = UserProfile.objects.get(pk=object_id)
             if obj:
                 extra_context = extra_context or {}
-                extra_context["show_save"] = False
+                extra_context["show_save"] = True
                 extra_context["show_save_and_continue"] = False
                 extra_context["show_save_and_add_another"] = False
                 extra_context["show_delete_link"] = False
@@ -58,6 +48,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         return super(UserProfileAdmin, self).changeform_view(
             request, object_id, extra_context=extra_context
         )
+    actions = ["export_as_csv"]
     def export_as_csv(self, request, queryset):
         meta = self.model._meta
         field_names = [field.name for field in meta.fields]
@@ -113,8 +104,6 @@ class UserAccountAdmin(UserAdmin):
         if obj:
             return [
                 "email",
-                "username",
-                "is_active",
                 "is_admin",
                 "created"
             ]
@@ -126,7 +115,7 @@ class UserAccountAdmin(UserAdmin):
             obj = User.objects.get(pk=object_id)
             if obj:
                 extra_context = extra_context or {}
-                extra_context["show_save"] = False
+                extra_context["show_save"] = True
                 extra_context["show_save_and_continue"] = False
                 extra_context["show_save_and_add_another"] = False
                 extra_context["show_delete_link"] = False
