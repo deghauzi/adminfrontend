@@ -161,24 +161,6 @@ VALID_IMAGE_EXTENSIONS = [
 LOGIN_URL = '/api/auth/jwt/create/'
 LOGOUT_URL = '/api/auth/logout'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('SMTP_SERVER', default='')
-EMAIL_PORT = config('SMTP_PORT', default=25, cast=int)
-EMAIL_HOST_USER = config('SMTP_LOGIN', default='')
-EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', default='')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-DEFAULT_FROM_EMAIL = 'De-Ghauzi <noreply@deghauzimicrolending.com>'
-
-
-# PAYSTACK PAYMENT
-# PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY', default='')
-# PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY', default='')
-# PAYSTACK_IP = config('PAYSTACK_IP', default='')
-
-
-# # Stripe Payment
-# STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
-# STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
 
 LOGGING = {
