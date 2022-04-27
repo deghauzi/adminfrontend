@@ -34,13 +34,12 @@ class DailyContributionAdmin(admin.ModelAdmin):
                 "bank_account",
                 "user_account",
                 "amount",
-                "approved",
                 "balance_after_transaction",
                 "created_by_admin_user",
                 "created",
             ]
         else:
-            return ["approved"]
+            return []
 
     actions = ["export_as_csv"]
 
@@ -62,7 +61,7 @@ class DailyContributionAdmin(admin.ModelAdmin):
             obj = DailyContribution.objects.get(pk=object_id)
             if obj:
                 extra_context = extra_context or {}
-                extra_context["show_save"] = False
+                extra_context["show_save"] = True
                 extra_context["show_save_and_continue"] = False
                 extra_context["show_save_and_add_another"] = False
                 extra_context["show_delete_link"] = False
@@ -134,7 +133,7 @@ class WalletTransactionAdmin(admin.ModelAdmin):
                 
             ]
         else:
-            return ["approved"]
+            return []
 
     actions = ["export_as_csv"]
 
@@ -156,7 +155,7 @@ class WalletTransactionAdmin(admin.ModelAdmin):
             obj = WalletTransaction.objects.get(pk=object_id)
             if obj:
                 extra_context = extra_context or {}
-                extra_context["show_save"] = False
+                extra_context["show_save"] = True
                 extra_context["show_save_and_continue"] = False
                 extra_context["show_save_and_add_another"] = False
                 extra_context["show_delete_link"] = False
@@ -233,13 +232,28 @@ class TargetContributionAdmin(admin.ModelAdmin):
         "created_by_admin_user",
         "created",
     ]
-
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return [
+                "TransID",
+        "user_account",
+        "contribution_amount",
+        "contribution_balance",
+        "contribution_type",
+        "transaction_type",
+        "created_by_admin_user",
+         "created"
+        
+                
+            ]
+        else:
+            return []
     def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
         try:
             obj = TargetContribution.objects.get(pk=object_id)
             if obj:
                 extra_context = extra_context or {}
-                extra_context["show_save"] = False
+                extra_context["show_save"] = True
                 extra_context["show_save_and_continue"] = False
                 extra_context["show_save_and_add_another"] = False
                 extra_context["show_delete_link"] = False
