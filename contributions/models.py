@@ -40,6 +40,7 @@ class DailyContribution(SafeDeleteModel):
     transaction_type = models.PositiveSmallIntegerField(
         choices=TRANSACTION_TYPE_CHOICES
     )
+    approved = models.BooleanField(default=False)
     TransID = models.CharField(max_length=12,default='')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -84,6 +85,7 @@ class WalletTransaction(SafeDeleteModel):
     transaction_type = models.PositiveSmallIntegerField(
         choices=TRANSACTION_TYPE_CHOICES
     )
+    approved = models.BooleanField(default=False)
     TransID = models.CharField(max_length=12,default='')
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -127,6 +129,7 @@ class TargetContribution(SafeDeleteModel):
         null=True, blank=True,default='0'
     )
     TransID = models.CharField(max_length=12,default='')
+    approved = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
     objects = SafeDeleteManager()
