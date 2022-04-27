@@ -12,7 +12,7 @@ class UserDailyContributionAPI(ModelViewSet):
     ordering = ['created']
 
     def get_queryset(self):
-        query = DailyContribution.objects.filter(user_account=self.request.user)
+        query = DailyContribution.objects.filter(approved=True,user_account=self.request.user)
         return query
 
 
@@ -23,5 +23,5 @@ class TargetContributionAPI(ModelViewSet):
     ordering = ['created']
 
     def get_queryset(self):
-        query = TargetContribution.objects.filter(user_account=self.request.user)
+        query = TargetContribution.objects.filter(approved=True,user_account=self.request.user)
         return query
