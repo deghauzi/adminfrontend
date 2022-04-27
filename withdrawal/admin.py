@@ -1,7 +1,7 @@
 import csv
 from django.contrib import admin
 from .models import WithdrawalRequest
-from utils.functions import  gen_key
+from utils.functions import  gen_key, gen_key_wa
 from django.http import HttpResponse
 
 
@@ -54,8 +54,8 @@ class WithdrawalRequestAdmin(admin.ModelAdmin):
         return actions
     
     def has_add_permission(self, request, obj=None):
-        return True
+        return False
     def save_model(self, request, obj, form, change):
         obj.request_proccessed_by =request.user
-        obj.TransID=f"wth_{gen_key(5)}"
+        obj.TransID = f"{gen_key_wa(5)}"
         return super().save_model(request, obj, form, change)
