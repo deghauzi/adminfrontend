@@ -13,6 +13,7 @@ class DailyContributionAdmin(admin.ModelAdmin):
         "TransID",
         "bank_account",
         "amount",
+        "approved",
         "balance_after_transaction",
         "transaction_type",
         "created_by_admin_user",
@@ -20,6 +21,7 @@ class DailyContributionAdmin(admin.ModelAdmin):
     list_filter = (
         "bank_account",
         "amount",
+        "approved",
         "created_by_admin_user",
         "transaction_type",
     )
@@ -32,12 +34,13 @@ class DailyContributionAdmin(admin.ModelAdmin):
                 "bank_account",
                 "user_account",
                 "amount",
+                "approved",
                 "balance_after_transaction",
                 "created_by_admin_user",
                 "created",
             ]
         else:
-            return []
+            return ["approved"]
 
     actions = ["export_as_csv"]
 
@@ -105,6 +108,7 @@ class WalletTransactionAdmin(admin.ModelAdmin):
         "TransID",
         "bank_account_user",
         "amount",
+        "approved",
         "balance_after_transaction",
         "transaction_type",
         "created_by_admin_user",
@@ -112,6 +116,7 @@ class WalletTransactionAdmin(admin.ModelAdmin):
     list_filter = (
         "bank_account_user",
         "amount",
+        "approved",
         "created_by_admin_user",
         "transaction_type",
     )
@@ -126,9 +131,10 @@ class WalletTransactionAdmin(admin.ModelAdmin):
                 "balance_after_transaction",
                 "created_by_admin_user",
                 "created",
+                
             ]
         else:
-            return []
+            return ["approved"]
 
     actions = ["export_as_csv"]
 
@@ -211,11 +217,13 @@ class TargetContributionAdmin(admin.ModelAdmin):
         "contribution_amount",
         "contribution_type",
         "transaction_type",
+        "approved",
         "created_by_admin_user",
     )
     list_filter = (
         "user_account",
         "contribution_amount",
+        "approved",
         "created_by_admin_user",
         "transaction_type",
     )
@@ -282,17 +290,3 @@ class TargetContributionAdmin(admin.ModelAdmin):
         obj.TransID = f"{gen_key_wa(5)}"
         super().save_model(request, obj, form, change)
 
-    actions = ["export_as_csv"]
-
-    def export_as_csv(self, request, queryset):
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
-        writer = csv.writer(response)
-        writer.writerow(field_names)
-        for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
-        return response
-
-    export_as_csv.short_description = "Export Selected"
