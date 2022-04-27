@@ -11,6 +11,7 @@ class DailyContributionForm(ModelForm):
             "amount",
             "bank_account",
             "balance_after_transaction",
+            "approved"
         )
 
     def clean(self) -> None:
@@ -39,6 +40,7 @@ class WalletTransactionForm(ModelForm):
             "bank_account_user",
             "wallet_account",
             "balance_after_transaction",
+            "approved"
         )
 
     def clean(self) -> None:

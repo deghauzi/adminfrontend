@@ -39,7 +39,8 @@ class DailyContributionAdmin(admin.ModelAdmin):
                 "created",
             ]
         else:
-            return []
+            return ["TransID","balance_after_transaction",
+                "created_by_admin_user"]
 
     actions = ["export_as_csv"]
 
@@ -133,7 +134,8 @@ class WalletTransactionAdmin(admin.ModelAdmin):
                 
             ]
         else:
-            return []
+            return ["TransID","balance_after_transaction","created_by_admin_user",
+                "created"]
 
     actions = ["export_as_csv"]
 
@@ -226,12 +228,7 @@ class TargetContributionAdmin(admin.ModelAdmin):
         "created_by_admin_user",
         "transaction_type",
     )
-    readonly_fields = [
-        "TransID",
-        "contribution_balance",
-        "created_by_admin_user",
-        "created",
-    ]
+    
     def get_readonly_fields(self, request, obj=None):
         if obj:
             return [
@@ -242,12 +239,18 @@ class TargetContributionAdmin(admin.ModelAdmin):
         "contribution_type",
         "transaction_type",
         "created_by_admin_user",
-         "created"
-        
-                
+         "created"  
             ]
         else:
-            return []
+            return [
+                "TransID",
+        "contribution_balance",
+        "created_by_admin_user",
+        "created"
+                
+            ]
+        
+        
     def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
         try:
             obj = TargetContribution.objects.get(pk=object_id)
