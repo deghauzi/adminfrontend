@@ -299,8 +299,7 @@ class TargetContributionAdmin(admin.ModelAdmin):
         if obj.transaction_type == 1 and obj.contribution_balance == 0.00:
             obj.contribution_balance = obj.contribution_amount
         if obj.transaction_type == 1 and int(obj.contribution_balance) > 0:
-            balance = obj.contribution_balance + obj.contribution_amount
-            obj.contribution_balance = balance
+            obj.contribution_balance += obj.contribution_amount
         if obj.transaction_type == 2:
             pass
             # obj.contribution_balance = obj.contribution_amount
