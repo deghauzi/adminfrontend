@@ -86,20 +86,23 @@ class DailyContributionAdmin(admin.ModelAdmin):
         return True
 
     def save_model(self, request, obj, form, change):
-        obj.created_by_admin_user = request.user
-        if obj.transaction_type == 1 and obj.bank_account.bank_account_balance == 0.00:
-            obj.balance_after_transaction = obj.amount
-            obj.bank_account.bank_account_balance += obj.amount
-        elif obj.transaction_type == 1 and obj.bank_account.bank_account_balance > 0.00:
-            balance = obj.bank_account.bank_account_balance + obj.amount
-            obj.balance_after_transaction = balance
+        if obj.id:
+            super().save_model(request, obj, form, change)
         else:
-            obj.balance_after_transaction = (
-                obj.bank_account.bank_account_balance - obj.amount
-            )
-        obj.TransID = f"{gen_key_wa(5)}"
-        obj.user_account = obj.bank_account.user_profile
-        super().save_model(request, obj, form, change)
+            obj.created_by_admin_user = request.user
+            if obj.transaction_type == 1 and obj.bank_account.bank_account_balance == 0.00:
+                obj.balance_after_transaction = obj.amount
+                obj.bank_account.bank_account_balance += obj.amount
+            elif obj.transaction_type == 1 and obj.bank_account.bank_account_balance > 0.00:
+                balance = obj.bank_account.bank_account_balance + obj.amount
+                obj.balance_after_transaction = balance
+            else:
+                obj.balance_after_transaction = (
+                    obj.bank_account.bank_account_balance - obj.amount
+                )
+            obj.TransID = f"{gen_key_wa(5)}"
+            obj.user_account = obj.bank_account.user_profile
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(WalletTransaction)
