@@ -40,7 +40,7 @@ class DailyContributionAdmin(admin.ModelAdmin):
             ]
         else:
             return ["TransID","balance_after_transaction",
-                "created_by_admin_user"]
+                "created_by_admin_user","approved"]
 
     actions = ["export_as_csv"]
 
@@ -87,12 +87,13 @@ class DailyContributionAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.created_by_admin_user = request.user
-        if obj.transaction_type == 1 and obj.bank_account.bank_account_balance == 0:
+        if obj.transaction_type == 1 and obj.bank_account.bank_account_balance == 0.00:
             obj.balance_after_transaction = obj.amount
-        if obj.transaction_type == 1 and obj.bank_account.bank_account_balance > 0:
+            obj.bank_account.bank_account_balance += obj.amount
+        elif obj.transaction_type == 1 and obj.bank_account.bank_account_balance > 0.00:
             balance = obj.bank_account.bank_account_balance + obj.amount
             obj.balance_after_transaction = balance
-        if obj.transaction_type == 2:
+        else:
             obj.balance_after_transaction = (
                 obj.bank_account.bank_account_balance - obj.amount
             )
