@@ -33,7 +33,7 @@ class AllDailyContributionAPI(ModelViewSet):
 class AdminDailyContributionAPI(ModelViewSet):
     http_method_names = ["get"]
     serializer_class = DailyContributionSerializer
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     ordering = ["created"]
 
     def list(self, request):
