@@ -14,6 +14,12 @@ class UserCreateSerializer(UserCreateSerializer):
         model = user_model 
         fields = ['id', 'username', 'email', 'is_active','password', 'created', 'updated','is_admin']
         read_only_field = ['is_active', 'created', 'updated']
+        
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_model 
+        fields = ['id', 'username', 'email', 'is_active','is_admin']
+        # read_only_field = ['is_active', 'created', 'updated']
 
 
 class RegisterSerializer(serializers.ModelSerializer):

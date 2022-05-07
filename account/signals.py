@@ -15,7 +15,7 @@ def create_bonus_account(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=DailyContribution)
 def update_account_balance(sender, instance, created, **kwargs):
-    if created:
+    if instance.approved == True:
         try:
             obj, created = BankAccount.objects.update_or_create(pk=instance.bank_account.id,
                             defaults={'bank_account_balance': instance.balance_after_transaction})
