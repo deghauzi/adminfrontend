@@ -79,3 +79,24 @@ class AllContributionAPI(ModelViewSet):
     def get_queryset(self):
         query = TargetContribution.objects.all()
         return query
+    
+
+class AdminTargetContributionAPI(ModelViewSet):
+    http_method_names = ["get"]
+    serializer_class = TargetContributionSerializer
+    permission_classes = (IsAuthenticated,)
+    ordering = ["created"]
+
+    def list(self, request):
+        total_deposit = TargetContribution.objects.filter(
+            approved=True, transaction_type=1, created__gt=datetime.date.today()
+        ).aggregate(Sum("contribution_amount"))
+        total_withdrawal = TargetContribution.objects.filter(
+            approved=True, transaction_type=2, created__gt=datetime.date.today()
+        ).aggregate(Sum("contribution_amount"))
+        return Response(
+            {
+                "query_total_depo": total_deposit,
+                "query_total_withdrawal": total_withdrawal,
+            }
+        )

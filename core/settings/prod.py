@@ -20,6 +20,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'https://microlending-app-fe.vercel.app',
+    'https://microlendingapp-admin.vercel.app',
     'https://api-ghauzi.herokuapp.com',
 )
 CORS_ORIGIN_REGEX_WHITELIST = [
