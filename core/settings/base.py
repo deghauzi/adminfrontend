@@ -74,6 +74,13 @@ TEMPLATES = [
         },
     },
 ]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('SMTP_SERVER', default='')
+EMAIL_PORT = config('SMTP_PORT', default=26, cast=int)
+EMAIL_HOST_USER = config('SMTP_LOGIN', default='')
+EMAIL_HOST_PASSWORD = config('SMTP_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config(
+    'DEFAULT_FROM_EMAIL', default='noreply')
 
 
 LANGUAGE_CODE = 'en'
