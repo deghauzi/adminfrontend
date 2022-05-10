@@ -136,12 +136,12 @@ class WalletAccountAdmin(admin.ModelAdmin):
 # account type
 @admin.register(BankAccountType)
 class BankAccountTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "account_type_image")
+    list_display = ("name",)
     list_filter = ("name", )
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ["name", "account_type_image", "created"]
+            return ["name", "created"]
         else:
             return []
         
