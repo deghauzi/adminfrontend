@@ -6,7 +6,7 @@ from userprofile.auth_serializers import UserCreateSerializer
 class AccountTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccountType
-        fields = ['id', 'name','account_type_image', 'created', 'updated']
+        fields = ['id', 'name', 'created', 'updated']
         read_only_field = [ 'created', 'updated']
         
 class WalletAccountSerializer(serializers.ModelSerializer):
