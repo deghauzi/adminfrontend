@@ -6,7 +6,7 @@ import dj_database_url
 
 # database
 DATABASES = {'default': dj_database_url.config('DATABASE_URL')}
-ALLOWED_HOSTS += [".vercel.app", ".herokuapp.com"]
+ALLOWED_HOSTS += [".vercel.app", "deghauzilending.com"]
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
@@ -21,9 +21,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'https://microlending-app-fe.vercel.app',
     'https://microlendingapp-admin.vercel.app',
-    'https://admin.deghauzimicrolending.com',
-    'https://dashboard.deghauzimicrolending.com',
-    'https://api-ghauzi.herokuapp.com',
+    'https://staff.deghauzimicrolending.com',
+    'https://portal.deghauzimicrolending.com',
 )
 CORS_ORIGIN_REGEX_WHITELIST = [
     r"^https://\w+\.com$",
