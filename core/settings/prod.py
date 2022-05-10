@@ -22,7 +22,7 @@ CORS_ORIGIN_WHITELIST = (
     'https://microlending-app-fe.vercel.app',
     'https://microlendingapp-admin.vercel.app',
     'https://staff.deghauzimicrolending.com',
-    'https://portal.deghauzimicrolending.com',
+    'https://app.deghauzimicrolending.com',
 )
 CORS_ORIGIN_REGEX_WHITELIST = [
     r"^https://\w+\.com$",
